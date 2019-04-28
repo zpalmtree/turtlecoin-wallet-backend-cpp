@@ -15,7 +15,6 @@ include_directories(${CMAKE_SOURCE_DIR}/external/lz4)
 # Show cmake where the source files are
 # Note, if you add remove a source file, you will need to re-run cmake so it
 # can find the new file
-file(GLOB_RECURSE BlockchainExplorer BlockchainExplorer/*)
 file(GLOB_RECURSE Common Common/*)
 file(GLOB_RECURSE Crypto crypto/*)
 file(GLOB_RECURSE CryptoNoteCore CryptoNoteCore/* CryptoNoteConfig.h)
@@ -33,7 +32,6 @@ file(GLOB_RECURSE Serialization Serialization/*)
 file(GLOB_RECURSE SubWallets SubWallets/*)
 file(GLOB_RECURSE Transfers Transfers/*)
 file(GLOB_RECURSE Utilities Utilities/*)
-file(GLOB_RECURSE Wallet Wallet/*)
 file(GLOB_RECURSE WalletBackend WalletBackend/*)
 file(GLOB_RECURSE zedwallet++ zedwallet++/*)
 
@@ -46,10 +44,9 @@ else()
 endif()
 
 # Group the files together in IDEs
-source_group("" FILES $${Common} ${Crypto} ${CryptoNoteCore} ${CryptoNoteProtocol} ${Http} ${Logging} ${Logger} ${Mnemonics} ${Nigel} ${NodeRpcProxy} ${P2p} ${Rpc} ${Serialization} ${System} ${Transfers} ${Wallet} ${WalletBackend} ${zedwallet++} ${Errors} ${Utilities} ${SubWallets})
+source_group("" FILES $${Common} ${Crypto} ${CryptoNoteCore} ${CryptoNoteProtocol} ${Http} ${Logging} ${Logger} ${Mnemonics} ${Nigel} ${NodeRpcProxy} ${P2p} ${Rpc} ${Serialization} ${System} ${Transfers} ${WalletBackend} ${zedwallet++} ${Errors} ${Utilities} ${SubWallets})
 
 # Define a group of files as a library to link against
-add_library(BlockchainExplorer STATIC ${BlockchainExplorer})
 add_library(Common STATIC ${Common})
 add_library(Crypto STATIC ${Crypto})
 add_library(CryptoNoteCore STATIC ${CryptoNoteCore})
@@ -67,7 +64,6 @@ add_library(SubWallets STATIC ${SubWallets})
 add_library(System STATIC ${System})
 add_library(Transfers STATIC ${Transfers})
 add_library(Utilities STATIC ${Utilities})
-add_library(Wallet STATIC ${Wallet})
 add_library(WalletBackend STATIC ${WalletBackend})
 
 add_executable(zedwallet++ ${zedwallet++} ${ZED_WALLET_SOURCES_OS})
@@ -97,7 +93,6 @@ target_link_libraries(Nigel Errors)
 target_link_libraries(P2P CryptoNoteCore upnpc-static)
 target_link_libraries(Rpc P2P Utilities)
 target_link_libraries(SubWallets Utilities CryptoNoteCore Logger)
-target_link_libraries(Wallet NodeRpcProxy Transfers CryptoNoteCore Common ${Boost_LIBRARIES})
 target_link_libraries(WalletBackend Mnemonics CryptoNoteCore Nigel cryptopp-static __filesystem Utilities SubWallets Logger)
 target_link_libraries(zedwallet++ WalletBackend)
 
