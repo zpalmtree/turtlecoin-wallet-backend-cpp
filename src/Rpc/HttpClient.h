@@ -18,6 +18,7 @@
 #pragma once
 
 #include <memory>
+#include <mutex>
 
 #include <HTTP/HttpRequest.h>
 #include <HTTP/HttpResponse.h>

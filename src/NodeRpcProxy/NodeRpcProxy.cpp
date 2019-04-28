@@ -11,6 +11,7 @@
 #include <ctime>
 #include <system_error>
 #include <thread>
+#include <future>
 
 #include <HTTP/HttpRequest.h>
 #include <HTTP/HttpResponse.h>
