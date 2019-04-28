@@ -22,9 +22,8 @@
 #include <Common/VectorOutputStream.h>
 
 #include <config/CryptoNoteConfig.h>
-#include <config/Constants.h>
-
-#include <limits>
+#include <Serialization/SerializationTools.h>
+#include <Serialization/CryptoNoteSerialization.h>
 
 #include <Serialization/BinaryOutputStreamSerializer.h>
 #include <Serialization/BinaryInputStreamSerializer.h>

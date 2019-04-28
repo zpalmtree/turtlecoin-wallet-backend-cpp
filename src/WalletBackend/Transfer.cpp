@@ -1084,20 +1084,16 @@ TransactionResult makeTransaction(
 
     if (paymentID != "")
     {
-        Crypto::Hash paymentIDBin;
-
-        Common::podFromHex(paymentID, paymentIDBin);
-
         /* Indicate this is the extra nonce */
         extra.push_back(Constants::TX_EXTRA_NONCE_IDENTIFIER);
 
         /* Add the length of the extra nonce (PID tag + PID length == 33) */
-        extra.push_back(1 + 32);
+        extra.push_back(1 + paymentID.size());
 
         /* Indicate this is the payment ID */
         extra.push_back(Constants::TX_EXTRA_PAYMENT_ID_IDENTIFIER);
 
-        std::copy(std::begin(paymentIDBin.data), std::end(paymentIDBin.data), std::back_inserter(extra));
+        std::copy(paymentID.begin(), paymentID.end(), std::back_inserter(extra));
     }
 
     /* Add the pub key identifier to extra */
@@ -1106,7 +1102,7 @@ TransactionResult makeTransaction(
     const auto pubKey = result.txKeyPair.publicKey;
 
     /* Append the pub key to extra */
-    std::copy(std::begin(pubKey.data), std::end(pubKey.data), std::back_inserter(extra));
+    std::copy(std::begin(pubKey.data), std::begin(pubKey.data), std::back_inserter(extra));
 
     CryptoNote::Transaction setupTX;
 

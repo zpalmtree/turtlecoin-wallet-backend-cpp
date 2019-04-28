@@ -6,8 +6,6 @@
 #include <SubWallets/SubWallet.h>
 /////////////////////////////////
 
-#include <config/Constants.h>
-
 #include <Logger/Logger.h>
 
 #include <Utilities/Utilities.h>

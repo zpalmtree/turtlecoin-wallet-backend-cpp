@@ -159,18 +159,7 @@ bool toBinaryArray(const T& object, std::vector<uint8_t>& binaryArray) {
 }
 
 template<>
-inline bool toBinaryArray(const std::vector<uint8_t>& object, std::vector<uint8_t>& binaryArray) {
-  try {
-    Common::VectorOutputStream stream(binaryArray);
-    BinaryOutputStreamSerializer serializer(stream);
-    std::string oldBlob = Common::asString(object);
-    serializer(oldBlob, "");
-  } catch (std::exception&) {
-    return false;
-  }
-
-  return true;
-}
+bool toBinaryArray(const std::vector<uint8_t>& object, std::vector<uint8_t>& binaryArray); 
 
 template<class T>
 T fromBinaryArray(const std::vector<uint8_t>& binaryArray) {
@@ -195,4 +184,5 @@ bool fromBinaryArray(T& object, const std::vector<uint8_t>& binaryArray) {
 
   return true;
 }
+
 }
