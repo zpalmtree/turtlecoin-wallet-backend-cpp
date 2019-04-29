@@ -24,16 +24,8 @@ file(GLOB_RECURSE Utilities Utilities/*)
 file(GLOB_RECURSE WalletBackend WalletBackend/*)
 file(GLOB_RECURSE zedwallet++ zedwallet++/*)
 
-if(MSVC)
-    file(GLOB_RECURSE System System/* Platform/Windows/System/*)
-elseif(APPLE)
-    file(GLOB_RECURSE System System/* Platform/OSX/System/* Platform/Posix/System/*)
-else()
-    file(GLOB_RECURSE System System/* Platform/Linux/System/* Platform/Posix/System/*)
-endif()
-
 # Group the files together in IDEs
-source_group("" FILES $${Common} ${Crypto} ${Logger} ${Mnemonics} ${Nigel} ${Serialization} ${System} ${WalletBackend} ${zedwallet++} ${Errors} ${Utilities} ${SubWallets})
+source_group("" FILES $${Common} ${Crypto} ${Logger} ${Mnemonics} ${Nigel} ${Serialization} ${WalletBackend} ${zedwallet++} ${Errors} ${Utilities} ${SubWallets})
 
 # Define a group of files as a library to link against
 add_library(Common STATIC ${Common})
@@ -44,14 +36,12 @@ add_library(Mnemonics STATIC ${Mnemonics})
 add_library(Nigel STATIC ${Nigel})
 add_library(Serialization STATIC ${Serialization})
 add_library(SubWallets STATIC ${SubWallets})
-add_library(System STATIC ${System})
 add_library(Utilities STATIC ${Utilities})
 add_library(WalletBackend STATIC ${WalletBackend})
 
 add_executable(zedwallet++ ${zedwallet++} ${ZED_WALLET_SOURCES_OS})
 
 if(MSVC)
-    target_link_libraries(System ws2_32)
     target_link_libraries(zedwallet++ ws2_32 advapi32 crypt32 gdi32 user32)
 endif ()
 
