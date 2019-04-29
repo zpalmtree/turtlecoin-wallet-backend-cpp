@@ -2,31 +2,22 @@
 add_definitions(-DSTATICLIB)
 
 # Add external libraries as include dirs, so we can do #include "httplib" for example
-include_directories(${CMAKE_SOURCE_DIR}/external/rocksdb/include)
 include_directories(${CMAKE_SOURCE_DIR}/external/cpp-linenoise)
 include_directories(${CMAKE_SOURCE_DIR}/external/cpp-httplib)
 include_directories(${CMAKE_SOURCE_DIR}/external/nlohmann-json)
 include_directories(${CMAKE_SOURCE_DIR}/external/rapidjson)
 include_directories(${CMAKE_SOURCE_DIR}/external/cxxopts)
 include_directories(${CMAKE_SOURCE_DIR}/external/cryptopp)
-include_directories(${CMAKE_SOURCE_DIR}/external/sqlite3)
-include_directories(${CMAKE_SOURCE_DIR}/external/lz4)
 
 # Show cmake where the source files are
 # Note, if you add remove a source file, you will need to re-run cmake so it
 # can find the new file
 file(GLOB_RECURSE Common Common/*)
 file(GLOB_RECURSE Crypto crypto/*)
-file(GLOB_RECURSE CryptoNoteCore CryptoNoteCore/* CryptoNoteConfig.h)
-file(GLOB_RECURSE CryptoNoteProtocol CryptoNoteProtocol/*)
 file(GLOB_RECURSE Errors Errors/*)
-file(GLOB_RECURSE Http HTTP/*)
-file(GLOB_RECURSE Logging Logging/*)
 file(GLOB_RECURSE Logger Logger/*)
 file(GLOB_RECURSE Mnemonics Mnemonics/*)
 file(GLOB_RECURSE Nigel Nigel/*)
-file(GLOB_RECURSE P2p P2p/*)
-file(GLOB_RECURSE Rpc Rpc/*)
 file(GLOB_RECURSE Serialization Serialization/*)
 file(GLOB_RECURSE SubWallets SubWallets/*)
 file(GLOB_RECURSE Utilities Utilities/*)
@@ -42,20 +33,15 @@ else()
 endif()
 
 # Group the files together in IDEs
-source_group("" FILES $${Common} ${Crypto} ${CryptoNoteCore} ${CryptoNoteProtocol} ${Http} ${Logging} ${Logger} ${Mnemonics} ${Nigel} ${P2p} ${Rpc} ${Serialization} ${System} ${WalletBackend} ${zedwallet++} ${Errors} ${Utilities} ${SubWallets})
+source_group("" FILES $${Common} ${Crypto} ${Logger} ${Mnemonics} ${Nigel} ${Serialization} ${System} ${WalletBackend} ${zedwallet++} ${Errors} ${Utilities} ${SubWallets})
 
 # Define a group of files as a library to link against
 add_library(Common STATIC ${Common})
 add_library(Crypto STATIC ${Crypto})
-add_library(CryptoNoteCore STATIC ${CryptoNoteCore})
 add_library(Errors STATIC ${Errors})
-add_library(Http STATIC ${Http})
-add_library(Logging STATIC ${Logging})
 add_library(Logger STATIC ${Logger})
 add_library(Mnemonics STATIC ${Mnemonics})
 add_library(Nigel STATIC ${Nigel})
-add_library(P2P STATIC ${CryptoNoteProtocol} ${P2p})
-add_library(Rpc STATIC ${Rpc})
 add_library(Serialization STATIC ${Serialization})
 add_library(SubWallets STATIC ${SubWallets})
 add_library(System STATIC ${System})
@@ -82,12 +68,8 @@ endif()
 
 # Add the dependencies we need
 target_link_libraries(Common __filesystem)
-target_link_libraries(CryptoNoteCore Common Logging Crypto P2P Rpc Http Serialization System sqlite3 ${Boost_LIBRARIES})
 target_link_libraries(Errors Crypto SubWallets)
-target_link_libraries(Logging Common)
 target_link_libraries(Nigel Errors)
-target_link_libraries(P2P upnpc-static)
-target_link_libraries(Rpc P2P Utilities)
 target_link_libraries(SubWallets Common Logger)
 target_link_libraries(WalletBackend Serialization Mnemonics Nigel cryptopp-static __filesystem Utilities SubWallets Logger)
 target_link_libraries(zedwallet++ WalletBackend)
@@ -96,12 +78,6 @@ if(OPENSSL_FOUND)
   target_link_libraries(Nigel ${OPENSSL_LIBRARIES})
   target_link_libraries(zedwallet++ ${OPENSSL_LIBRARIES})
 endif()
-
-# Add dependencies means we have to build the latter before we build the former
-# In this case it's because we need to have the current version name rather
-# than a cached one
-add_dependencies(P2P version)
-add_dependencies(Rpc version)
 
 # Finally build the binaries
 set_property(TARGET zedwallet++ PROPERTY OUTPUT_NAME "zedwallet-beta")

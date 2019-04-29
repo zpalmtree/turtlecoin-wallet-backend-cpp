@@ -7,7 +7,6 @@
 #pragma once 
 
 #include <string>
-#include "Rpc/CoreRpcServerCommandsDefinitions.h"
 
 namespace Utilities
 {
@@ -20,8 +19,6 @@ namespace Utilities
     std::string get_upgrade_time(
         const uint64_t height,
         const uint64_t upgrade_height);
-
-    std::string get_status_string(CryptoNote::COMMAND_RPC_GET_INFO::response iresp);
 
     std::string formatAmount(const uint64_t amount);
 

@@ -9,6 +9,8 @@
 #include <Utilities/FormatTools.h>
 //////////////////////////////////
 
+#include <cmath>
+
 #include <cstdio>
 
 #include <ctime>
@@ -18,7 +20,7 @@
 
 #include <iomanip>
 
-#include <Rpc/CoreRpcServerCommandsDefinitions.h>
+#include <vector>
 
 namespace Utilities
 {
@@ -217,32 +219,6 @@ std::string get_upgrade_info(
 
     /* This shouldnt happen */
     return std::string();
-}
-
-std::string get_status_string(CryptoNote::COMMAND_RPC_GET_INFO::response iresp) {
-  std::stringstream ss;
-  std::time_t uptime = std::time(nullptr) - iresp.start_time;
-  auto forkStatus = get_fork_status(iresp.network_height, iresp.upgrade_heights, iresp.supported_height);
-
-  ss << "Height: " << iresp.height << "/" << iresp.network_height
-     << " (" << get_sync_percentage(iresp.height, iresp.network_height) << "%) "
-     << "on " << (iresp.testnet ? "testnet, " : "mainnet, ")
-     << (iresp.synced ? "synced, " : "syncing, ")
-     << "net hash " << get_mining_speed(iresp.hashrate) << ", "
-     << "v" << +iresp.major_version << ","
-     << get_update_status(forkStatus, iresp.network_height, iresp.upgrade_heights)
-     << ", " << iresp.outgoing_connections_count << "(out)+" << iresp.incoming_connections_count << "(in) connections, "
-     << "uptime " << (unsigned int)floor(uptime / 60.0 / 60.0 / 24.0)
-     << "d " << (unsigned int)floor(fmod((uptime / 60.0 / 60.0), 24.0))
-     << "h " << (unsigned int)floor(fmod((uptime / 60.0), 60.0))
-     << "m " << (unsigned int)fmod(uptime, 60.0) << "s";
-
-  if (forkStatus == OutOfDate)
-  {
-      ss << std::endl << get_upgrade_info(iresp.supported_height, iresp.upgrade_heights);
-  }
-
-  return ss.str();
 }
 
 /* Get the amount we need to divide to convert from atomic to pretty print,
