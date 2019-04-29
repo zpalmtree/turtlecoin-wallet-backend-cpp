@@ -184,5 +184,4 @@ bool fromBinaryArray(T& object, const std::vector<uint8_t>& binaryArray) {
 
   return true;
 }
-
 }

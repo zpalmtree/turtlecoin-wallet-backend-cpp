@@ -86,7 +86,7 @@ target_link_libraries(CryptoNoteCore Common Logging Crypto P2P Rpc Http Serializ
 target_link_libraries(Errors Crypto SubWallets)
 target_link_libraries(Logging Common)
 target_link_libraries(Nigel Errors)
-target_link_libraries(P2P CryptoNoteCore upnpc-static)
+target_link_libraries(P2P upnpc-static)
 target_link_libraries(Rpc P2P Utilities)
 target_link_libraries(SubWallets Common Logger)
 target_link_libraries(WalletBackend Serialization Mnemonics Nigel cryptopp-static __filesystem Utilities SubWallets Logger)
