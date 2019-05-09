@@ -17,6 +17,9 @@ project(TurtleCoin)
 enable_language(C)
 enable_language(CXX)
 
+#set(CMAKE_C_FLAGS "-m32")
+#set(CMAKE_CXX_FLAGS "-m32")
+
 # Assert our compiler is good
 if(CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
     # GCC 7.0 or higher
@@ -262,5 +265,4 @@ else()
   message(STATUS "OpenSSL Found: No... Skipping...")
 endif()
 
-add_subdirectory(external)
 add_subdirectory(src)
