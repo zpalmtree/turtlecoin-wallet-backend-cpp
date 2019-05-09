@@ -215,18 +215,6 @@ if(NOT MSVC)
   endif()
 endif()
 
-## Go get us some static BOOST libraries
-set(Boost_USE_STATIC_LIBS ON)
-set(Boost_USE_STATIC_RUNTIME ON)
-find_package(Boost REQUIRED COMPONENTS system filesystem thread date_time chrono regex serialization)
-message(STATUS "Boost Found: ${Boost_INCLUDE_DIRS}")
-include_directories(SYSTEM ${Boost_INCLUDE_DIRS})
-if(APPLE)
-  set(Boost_LIBRARIES "${Boost_LIBRARIES}")
-elseif(NOT MSVC)
-  set(Boost_LIBRARIES "${Boost_LIBRARIES};rt")
-endif()
-
 ## Let's see if we have any OpenSSL static libraries available
 set(OPENSSL_USE_STATIC_LIBS ON)
 ## On MSVC, we need to link the RT/MT libraries

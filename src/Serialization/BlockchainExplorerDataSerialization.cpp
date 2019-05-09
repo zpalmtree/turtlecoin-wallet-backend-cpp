@@ -19,9 +19,6 @@
 
 #include <stdexcept>
 
-#include <boost/variant/static_visitor.hpp>
-#include <boost/variant/apply_visitor.hpp>
-
 #include "Serialization/CryptoNoteSerialization.h"
 #include "Serialization/SerializationOverloads.h"
 
@@ -31,12 +28,12 @@ using CryptoNote::SerializationTag;
 
 namespace {
 
-struct BinaryVariantTagGetter: boost::static_visitor<uint8_t> {
+struct BinaryVariantTagGetter {
   uint8_t operator()(const CryptoNote::BaseInputDetails) { return static_cast<uint8_t>(SerializationTag::Base); }
   uint8_t operator()(const CryptoNote::KeyInputDetails) { return static_cast<uint8_t>(SerializationTag::Key); }
 };
 
-struct VariantSerializer : boost::static_visitor<> {
+struct VariantSerializer {
   VariantSerializer(CryptoNote::ISerializer& serializer, const std::string& name) : s(serializer), name(name) {}
 
   template <typename T>
@@ -46,7 +43,7 @@ struct VariantSerializer : boost::static_visitor<> {
   const std::string name;
 };
 
-void getVariantValue(CryptoNote::ISerializer& serializer, uint8_t tag, boost::variant<CryptoNote::BaseInputDetails,
+void getVariantValue(CryptoNote::ISerializer& serializer, uint8_t tag, std::variant<CryptoNote::BaseInputDetails,
                                                                                       CryptoNote::KeyInputDetails>& in) {
   switch (static_cast<SerializationTag>(tag)) {
   case SerializationTag::Base: {
@@ -99,11 +96,11 @@ void serialize(KeyInputDetails& inputToKey, ISerializer& serializer) {
 void serialize(TransactionInputDetails& input, ISerializer& serializer) {
   if (serializer.type() == ISerializer::OUTPUT) {
     BinaryVariantTagGetter tagGetter;
-    uint8_t tag = boost::apply_visitor(tagGetter, input);
+    uint8_t tag = std::visit(tagGetter, input);
     serializer.binary(&tag, sizeof(tag), "type");
 
     VariantSerializer visitor(serializer, "data");
-    boost::apply_visitor(visitor, input);
+    std::visit(visitor, input);
   } else {
     uint8_t tag;
     serializer.binary(&tag, sizeof(tag), "type");

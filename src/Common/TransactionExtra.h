@@ -19,7 +19,7 @@
 
 #include <algorithm>
 #include <vector>
-#include <boost/variant.hpp>
+#include <variant>
 
 #include <CryptoNote.h>
 
@@ -56,19 +56,19 @@ struct TransactionExtraMergeMiningTag {
 //   varint tag;
 //   varint size;
 //   varint data[];
-typedef boost::variant<TransactionExtraPadding, TransactionExtraPublicKey, TransactionExtraNonce, TransactionExtraMergeMiningTag> TransactionExtraField;
+typedef std::variant<TransactionExtraPadding, TransactionExtraPublicKey, TransactionExtraNonce, TransactionExtraMergeMiningTag> TransactionExtraField;
 
 
 
 template<typename T>
 bool findTransactionExtraFieldByType(const std::vector<TransactionExtraField>& tx_extra_fields, T& field) {
   auto it = std::find_if(tx_extra_fields.begin(), tx_extra_fields.end(),
-    [](const TransactionExtraField& f) { return typeid(T) == f.type(); });
+    [](const TransactionExtraField& f) { return std::holds_alternative<T>(f); });
 
   if (tx_extra_fields.end() == it)
     return false;
 
-  field = boost::get<T>(*it);
+  field = std::get<T>(*it);
   return true;
 }
 
