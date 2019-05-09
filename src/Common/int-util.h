@@ -178,7 +178,12 @@ static inline void memcpy_swap64(void *dst, const void *src, uint64_t n) {
 }
 
 #if !defined(BYTE_ORDER) || !defined(LITTLE_ENDIAN) || !defined(BIG_ENDIAN)
-static_assert(false, "BYTE_ORDER is undefined. Perhaps, GNU extensions are not enabled");
+    #if __ANDROID__
+        #define BYTE_ORDER 1
+        #define LITTLE_ENDIAN 1
+    #else
+        static_assert(false, "BYTE_ORDER is undefined. Perhaps, GNU extensions are not enabled");
+    #endif
 #endif
 
 #if BYTE_ORDER == LITTLE_ENDIAN

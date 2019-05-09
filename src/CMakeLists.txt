@@ -36,23 +36,11 @@ add_library(SubWallets STATIC ${SubWallets})
 add_library(Utilities STATIC ${Utilities})
 add_library(WalletBackend STATIC ${WalletBackend})
 
-# A bit of hackery so we don't have to do the if/else/ for every target that
-# wants to use filesystem
-add_library(__filesystem INTERFACE)
-
-# Windows works out of the box
-if (APPLE)
-    target_link_libraries(__filesystem INTERFACE /usr/local/opt/llvm/lib/libc++fs.a)
-elseif (UNIX)
-    target_link_libraries(__filesystem INTERFACE stdc++fs)
-endif()
-
 # Add the dependencies we need
-target_link_libraries(Common __filesystem)
 target_link_libraries(Errors Crypto SubWallets)
 target_link_libraries(Nigel Errors)
 target_link_libraries(SubWallets Common Logger)
-target_link_libraries(WalletBackend Serialization Mnemonics Nigel __filesystem Utilities SubWallets Logger)
+target_link_libraries(WalletBackend Serialization Mnemonics Nigel Utilities SubWallets Logger)
 
 if(OPENSSL_FOUND)
   target_link_libraries(Nigel ${OPENSSL_LIBRARIES})

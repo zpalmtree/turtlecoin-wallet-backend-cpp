@@ -143,10 +143,6 @@ bool serialize(KeyImage& keyImage, Common::StringView name, CryptoNote::ISeriali
   return serializePod(keyImage, name, serializer);
 }
 
-bool serialize(chacha8_iv& chacha, Common::StringView name, CryptoNote::ISerializer& serializer) {
-  return serializePod(chacha, name, serializer);
-}
-
 bool serialize(Signature& sig, Common::StringView name, CryptoNote::ISerializer& serializer) {
   return serializePod(sig, name, serializer);
 }

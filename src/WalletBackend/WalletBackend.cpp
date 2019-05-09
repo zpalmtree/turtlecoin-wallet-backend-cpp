@@ -7,7 +7,6 @@
 ////////////////////////////////////////
 
 #include <Common/Base58.h>
-#include <Common/FileSystemShim.h>
 
 #include <config/CryptoNoteConfig.h>
 
@@ -68,27 +67,6 @@ Error hasMagicIdentifier(
 
     /* Remove the identifier from the string */
     data.erase(data.begin(), data.begin() + identifier.size());
-
-    return SUCCESS;
-}
-
-/* Check the wallet filename for the new wallet to be created is valid */
-Error checkNewWalletFilename(std::string filename)
-{
-    /* Check the file doesn't exist */
-    if (std::ifstream(filename))
-    {
-        return WALLET_FILE_ALREADY_EXISTS;
-    }
-
-    /* Check we can open the file */
-    if (!std::ofstream(filename))
-    {
-        return INVALID_WALLET_FILENAME;
-    }
-
-    /* Don't leave random files around if we fail later down the road */
-    fs::remove(filename);
 
     return SUCCESS;
 }
@@ -192,12 +170,6 @@ std::tuple<Error, std::shared_ptr<WalletBackend>> WalletBackend::importWalletFro
     const bool daemonSSL,
     const unsigned int syncThreadCount)
 {
-    /* Check the filename is valid */
-    if (Error error = checkNewWalletFilename(filename); error != SUCCESS)
-    {
-        return {error, nullptr};
-    }
-
     /* Convert the mnemonic into a private spend key */
     auto [mnemonicError, privateSpendKey] = Mnemonics::MnemonicToPrivateKey(mnemonicSeed);
 
@@ -248,12 +220,6 @@ std::tuple<Error, std::shared_ptr<WalletBackend>> WalletBackend::importWalletFro
     const bool daemonSSL,
     const unsigned int syncThreadCount)
 {
-    /* Check the filename is valid */
-    if (Error error = checkNewWalletFilename(filename); error != SUCCESS)
-    {
-        return {error, nullptr};
-    }
-
     if (Error error = validatePrivateKey(privateViewKey); error != SUCCESS)
     {
         return {error, nullptr};
@@ -294,12 +260,6 @@ std::tuple<Error, std::shared_ptr<WalletBackend>> WalletBackend::importViewWalle
     const bool daemonSSL,
     const unsigned int syncThreadCount)
 {
-    /* Check the filename is valid */
-    if (Error error = checkNewWalletFilename(filename); error != SUCCESS)
-    {
-        return {error, nullptr};
-    }
-
     if (Error error = validatePrivateKey(privateViewKey); error != SUCCESS)
     {
         return {error, nullptr};
@@ -334,12 +294,6 @@ std::tuple<Error, std::shared_ptr<WalletBackend>> WalletBackend::createWallet(
     const bool daemonSSL,
     const unsigned int syncThreadCount)
 {
-    /* Check the filename is valid */
-    if (Error error = checkNewWalletFilename(filename); error != SUCCESS)
-    {
-        return {error, nullptr};
-    }
-
     CryptoNote::KeyPair spendKey;
     Crypto::SecretKey privateViewKey;
     Crypto::PublicKey publicViewKey;
