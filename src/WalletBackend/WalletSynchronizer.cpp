@@ -282,7 +282,6 @@ void WalletSynchronizer::blockProcessingThread()
                         input.globalOutputIndex = it->second[input.transactionIndex];
                     }
                 }
-
                 processedBlocks.push_back({ block, ourInputs, arrivalIndex });
             }
 
